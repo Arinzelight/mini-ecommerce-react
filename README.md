@@ -1,8 +1,6 @@
-# mini-ecommerce-react
+# 🛍️ Frontend Project: Mini eCommerce App
 
-# 🛍️ Frontend Intern Project: Mini eCommerce App
-
-Welcome to the intern task board! This mini-project will help you gain hands-on experience with **React**, **Vite**, **Tailwind CSS**, and **Redux Toolkit** by building an eCommerce frontend using a free API.
+This mini-project will help you gain hands-on experience with **React**, **Vite**, **Tailwind CSS**, and **Redux Toolkit** by building an eCommerce frontend using a free API.
 
 ---
 
@@ -25,7 +23,7 @@ Build a responsive mini eCommerce frontend that fetches data from a public eComm
 
 ---
 
-## 🔧 Project Setup (All Interns)
+## 🔧 Project Setup 
 
 1. Initialize a React project using **Vite**.
 2. Install and configure **Tailwind CSS**.
@@ -38,7 +36,7 @@ Build a responsive mini eCommerce frontend that fetches data from a public eComm
 
 ---
 
-## 🔹 Task 1: Product Listing Page (Intern A)
+## 🔹 Task 1: Product Listing Page 
 
 - Fetch all products using `/products` endpoint.
 - Display product **image**, **title**, **price**, and an **Add to Cart** button.
@@ -89,8 +87,6 @@ Build a responsive mini eCommerce frontend that fetches data from a public eComm
 ## 🧪 Testing & Code Review
 
 - Push your changes to GitHub.
-- Create Pull Requests (PRs) for review.
-- A team lead will review your code and suggest improvements.
 - Optionally deploy to **Vercel** or **Netlify** for live preview.
 
 ---
