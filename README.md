@@ -38,21 +38,21 @@ Example endpoints:
 ##  Features & Requirements (Total: 100 Points)
 
 ### 1. Home Page (20 points)
-- ✅ (10 pts) Fetch and display a list of product categories from the API (`/categories`)
-- ✅ (10 pts) Implement a search bar to filter products by title
-- (5 pts Bonus) Show the last 5 favorited and 5 last visited products using localStorage or Redux
+-  (10 pts) Fetch and display a list of product categories from the API (`/categories`)
+-  (10 pts) Fetch and display a 10 products from the API (add pagination)
+- (10 pts) Implement a search bar to filter products by title
 
 ---
 
 ### 2. Categories Page (20 points)
-- ✅ (10 pts) Display a list of categories fetched from the API
-- ✅ (10 pts) When a category is clicked, show products from that category (`/products/category/{categoryName}`)
+-  (10 pts) Display a list of categories fetched from the API
+-  (10 pts) When a category is clicked, show products from that category (`/products/category/{categoryName}`)
 -  (5 pts Bonus) Add pagination (e.g., 10 products per page)
 
 ---
 
 ### 3. Product Listing Page (20 points)
-- ✅ (20 pts) Display products in a table with:
+-  (20 pts) Display products in a table with:
   - Product Image
   - Name
   - Price
