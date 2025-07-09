@@ -90,10 +90,8 @@ export default function IndexPage() {
                 <ProductCard key={product.id} product={product} />
               ))}
               {!hasMore && products.length === 0 && (
-                <div className="col-span-1 sm:col-span-2 md:col-span-3 text-center text-primary font-semibold">
-                  No products found. Try a different search term.
-                </div>
-              )}
+                <div className="col-span-1 sm:col-span-2 md:col-span-3 text-center text-gray-500">
+                  No products found.}
             </div>
           )}
 

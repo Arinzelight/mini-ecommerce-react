@@ -59,7 +59,7 @@ export default function IndexPage() {
             {categories.map((cat) => (
               <div
                 key={cat.id}
-                className="bg-secondary-peach px-4 py-2 rounded-lg text-sm text-primary"
+                className="bg-secondary-peach px-4 py-2 rounded-lg text-xl text-primary"
               >
                 {cat.name}
               </div>
@@ -90,9 +90,9 @@ export default function IndexPage() {
                 <ProductCard key={product.id} product={product} />
               ))}
               {!hasMore && products.length === 0 && (
-                <div className="col-span-1 sm:col-span-2 md:col-span-3 text-center text-primary font-semibold">
-                  No products found. Try a different search term.
-                </div>
+                <div className="col-span-1 sm:col-span-2 md:col-span-3 text-center text-gray-500">
+                  No products found. Try a different search term. 
+                  </div>
               )}
             </div>
           )}

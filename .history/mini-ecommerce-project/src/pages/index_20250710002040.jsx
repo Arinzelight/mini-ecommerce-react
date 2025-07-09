@@ -1,13 +1,12 @@
-/* eslint-disable prettier/prettier */
 import { useEffect, useState } from "react";
 import { Spinner } from "@heroui/spinner";
 import { button as buttonStyles } from "@heroui/theme";
+import { SearchIcon } from "@/components/icons";
 
 import DefaultLayout from "@/layouts/default";
 import { fetchProducts } from "@/api/products";
 import { fetchCategories } from "@/api/categories";
 import ProductCard from "@/components/ProductCard";
-import SearchInput from "@/components/SearchInput";
 
 const PRODUCTS_PER_PAGE = 10;
 
@@ -22,7 +21,6 @@ export default function IndexPage() {
   useEffect(() => {
     const loadCategories = async () => {
       const data = await fetchCategories();
-
       setCategories(data.slice(0, 6));
     };
 
@@ -33,7 +31,6 @@ export default function IndexPage() {
     const loadProducts = async () => {
       setLoading(true);
       const data = await fetchProducts(page, PRODUCTS_PER_PAGE, searchTerm);
-
       setProducts(data);
       setHasMore(data.length === PRODUCTS_PER_PAGE);
       setLoading(false);
@@ -42,7 +39,7 @@ export default function IndexPage() {
     loadProducts();
   }, [page, searchTerm]);
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     setPage(0); // Reset to first page when searching
   };
@@ -52,9 +49,7 @@ export default function IndexPage() {
       <section className="flex flex-col gap-8 py-10 px-4 bg-secondary-blush dark:bg-primary-light rounded-md transition-all duration-500 min-h-screen">
         {/* Categories */}
         <div>
-          <h2 className="text-xl font-semibold text-primary mb-4">
-            Categories
-          </h2>
+          <h2 className="text-xl font-semibold text-primary mb-4">Categories</h2>
           <div className="flex flex-wrap gap-3">
             {categories.map((cat) => (
               <div
@@ -69,11 +64,16 @@ export default function IndexPage() {
 
         {/* Search Input */}
         <div className="max-w-md w-full mx-auto">
-          <SearchInput
-            placeholder="Search products by name..."
-            value={searchTerm}
-            onChange={handleSearch}
-          />
+          <div className="relative flex items-center">
+            <SearchIcon className="absolute left-3 text-base text-gray-400 pointer-events-none" />
+            <input
+              type="search"
+              placeholder="Search products..."
+              value={searchTerm}
+              onChange={handleSearch}
+              className="w-full pl-10 pr-3 py-2 rounded-lg bg-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-lavender dark:bg-gray-700 dark:text-white"
+            />
+          </div>
         </div>
 
         {/* Products */}
@@ -82,18 +82,13 @@ export default function IndexPage() {
 
           {loading ? (
             <div className="flex justify-center items-center py-10">
-              <Spinner color="primary" size="lg" />
+              <Spinner size="lg" color="primary" />
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
-              {!hasMore && products.length === 0 && (
-                <div className="col-span-1 sm:col-span-2 md:col-span-3 text-center text-primary font-semibold">
-                  No products found. Try a different search term.
-                </div>
-              )}
             </div>
           )}
 
@@ -102,10 +97,7 @@ export default function IndexPage() {
             <div className="flex justify-center gap-4 mt-6">
               {page > 0 && (
                 <button
-                  className={buttonStyles({
-                    variant: "bordered",
-                    radius: "full",
-                  })}
+                  className={buttonStyles({ variant: "bordered", radius: "full" })}
                   onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
                 >
                   Previous

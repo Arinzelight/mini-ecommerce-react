@@ -1,13 +1,12 @@
-/* eslint-disable prettier/prettier */
 import { useEffect, useState } from "react";
 import { Spinner } from "@heroui/spinner";
 import { button as buttonStyles } from "@heroui/theme";
 
+import { SearchIcon } from "@/components/icons";
 import DefaultLayout from "@/layouts/default";
 import { fetchProducts } from "@/api/products";
 import { fetchCategories } from "@/api/categories";
 import ProductCard from "@/components/ProductCard";
-import SearchInput from "@/components/SearchInput";
 
 const PRODUCTS_PER_PAGE = 10;
 
@@ -69,11 +68,16 @@ export default function IndexPage() {
 
         {/* Search Input */}
         <div className="max-w-md w-full mx-auto">
-          <SearchInput
-            placeholder="Search products by name..."
-            value={searchTerm}
-            onChange={handleSearch}
-          />
+          <div className="relative flex items-center">
+            <SearchIcon className="absolute left-3 text-base text-gray-400 pointer-events-none" />
+            <input
+              className="w-full pl-10 pr-3 py-2 rounded-lg bg-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-lavender dark:bg-gray-700 dark:text-white"
+              placeholder="Search products..."
+              type="search"
+              value={searchTerm}
+              onChange={handleSearch}
+            />
+          </div>
         </div>
 
         {/* Products */}
@@ -89,11 +93,6 @@ export default function IndexPage() {
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
-              {!hasMore && products.length === 0 && (
-                <div className="col-span-1 sm:col-span-2 md:col-span-3 text-center text-primary font-semibold">
-                  No products found. Try a different search term.
-                </div>
-              )}
             </div>
           )}
 

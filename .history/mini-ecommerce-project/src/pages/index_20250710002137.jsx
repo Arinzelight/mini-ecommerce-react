@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import { Spinner } from "@heroui/spinner";
 import { button as buttonStyles } from "@heroui/theme";
 
+import { SearchIcon } from "@/components/icons";
 import DefaultLayout from "@/layouts/default";
 import { fetchProducts } from "@/api/products";
 import { fetchCategories } from "@/api/categories";
 import ProductCard from "@/components/ProductCard";
-import SearchInput from "@/components/SearchInput";
 
 const PRODUCTS_PER_PAGE = 10;
 
@@ -68,13 +68,7 @@ export default function IndexPage() {
         </div>
 
         {/* Search Input */}
-        <div className="max-w-md w-full mx-auto">
-          <SearchInput
-            placeholder="Search products by name..."
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-        </div>
+        
 
         {/* Products */}
         <div>
@@ -89,11 +83,6 @@ export default function IndexPage() {
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
-              {!hasMore && products.length === 0 && (
-                <div className="col-span-1 sm:col-span-2 md:col-span-3 text-center text-primary font-semibold">
-                  No products found. Try a different search term.
-                </div>
-              )}
             </div>
           )}
 

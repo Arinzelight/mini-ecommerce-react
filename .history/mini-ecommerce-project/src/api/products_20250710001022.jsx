@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 export const fetchProducts = async (page = 0, limit = 10, title = "") => {
   try {
     const query = new URLSearchParams({
