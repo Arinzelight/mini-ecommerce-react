@@ -1,15 +1,10 @@
+/* eslint-disable prettier/prettier */
 import * as React from "react";
 
 // ! new icons
 
 export const Logo = ({ size = 32, ...props }) => (
-  <svg
-    fill="none"
-    height={size}
-    viewBox="0 0 32 32"
-    width={size}
-    {...props}
-  >
+  <svg fill="none" height={size} viewBox="0 0 32 32" width={size} {...props}>
     <path
       clipRule="evenodd"
       d="M17.6482 10.1305L15.8785 7.02583L7.02979 22.5499H10.5278L17.6482 10.1305ZM19.8798 14.0457L18.11 17.1983L19.394 19.4511H16.8453L15.1056 22.5499H24.7272L19.8798 14.0457Z"
@@ -49,25 +44,24 @@ export const SearchIcon = ({ size = 24, ...props }) => (
 
 export const CartIcon = ({ size = 24, ...props }) => (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
     fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
     height={size}
+    stroke="currentColor"
+    strokeWidth={1.5}
+    viewBox="0 0 24 24"
     width={size}
+    xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
     <path
+      d="M2.25 3h1.386c.51 0 .955.343 1.023.837l.54 3.005H18.75c.621 0 1.125.504 1.125 1.125v3.879m-1.125-3.879V21a2.25 2.25 0 01-2.25 2.25H15.75m-15-10.5h15M3.23 20.893C4.032 21.683 4.975 22.125 6 22.125h12c1.025 0 1.968-.442 2.77-1.232C21.574 20.122 22.125 19.165 22.125 18V8.25c0-.621-.504-1.125-1.125-1.125h-15V5.25A2.25 2.25 0 002.25 3z"
       strokeLinecap="round"
       strokeLinejoin="round"
-      d="M2.25 3h1.386c.51 0 .955.343 1.023.837l.54 3.005H18.75c.621 0 1.125.504 1.125 1.125v3.879m-1.125-3.879V21a2.25 2.25 0 01-2.25 2.25H15.75m-15-10.5h15M3.23 20.893C4.032 21.683 4.975 22.125 6 22.125h12c1.025 0 1.968-.442 2.77-1.232C21.574 20.122 22.125 19.165 22.125 18V8.25c0-.621-.504-1.125-1.125-1.125h-15V5.25A2.25 2.25 0 002.25 3z"
     />
   </svg>
 );
 
 // ! template icons
-
 
 export const GithubIcon = ({ size = 24, width, height, ...props }) => (
   <svg

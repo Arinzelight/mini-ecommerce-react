@@ -1,9 +1,11 @@
+/* eslint-disable prettier/prettier */
 import React, { useState } from "react";
 import clsx from "clsx"; // A utility for conditionally joining class names
 
 import { siteConfig } from "../config/site";
 
 import { Logo, SearchIcon, CartIcon } from "./icons";
+import { ThemeSwitch } from "./theme-switch";
 
 // --- Navbar Component ---
 export const Navbar = () => {
@@ -103,6 +105,9 @@ export const Navbar = () => {
               <SearchIcon className="w-6 h-6 text-primary cursor-pointer hover:text-primary-light transition-colors duration-200" />
             )}
           </div>
+
+          {/* Dark Mode Switch */}
+          <ThemeSwitch />
 
           {/* Hamburger Menu Toggle */}
           {/* hidden on lg screens and up */}

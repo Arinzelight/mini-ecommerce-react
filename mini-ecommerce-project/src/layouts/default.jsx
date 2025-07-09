@@ -1,10 +1,9 @@
+/* eslint-disable prettier/prettier */
 import { Link } from "@heroui/link";
 
 import { Navbar } from "@/components/Navbar";
 
-export default function DefaultLayout({
-  children,
-}) {
+export default function DefaultLayout({ children }) {
   return (
     <div className="relative flex flex-col h-screen">
       <Navbar />
@@ -19,7 +18,7 @@ export default function DefaultLayout({
           title="heroui.com homepage"
         >
           <span className="text-default-600">Powered by</span>
-          <p className="text-primary">HeroUI</p>
+          <p className="text-primary">KNODI</p>
         </Link>
       </footer>
     </div>
