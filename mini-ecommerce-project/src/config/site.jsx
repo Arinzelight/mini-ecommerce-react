@@ -11,7 +11,4 @@ export const siteConfig = {
     { label: "Products", href: "/products" },
     { label: "Cart", href: "/cart" },
   ],
-  links: {
-    github: "https://github.com", 
-  },
 };
