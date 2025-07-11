@@ -1,11 +1,9 @@
-/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from "react";
 
 import { fetchCategories } from "../api/categories";
 import { fetchProductsByCategory } from "../api/products";
 
 import DefaultLayout from "@/layouts/default";
-import ProductGrid from "@/components/ProductGrid";
 
 const PRODUCTS_PER_PAGE = 10;
 
@@ -36,7 +34,7 @@ export default function CategoriesPage() {
         setCategories(validCategories);
       } catch (err) {
         setError("Failed to load categories. Please try again later.");
-        console.error("Error fetching categories:", err);
+        console.error("Error setting categories data:", err);
       } finally {
         setIsLoading(false);
       }
@@ -73,7 +71,7 @@ export default function CategoriesPage() {
         setProducts(validProducts.slice(0, PRODUCTS_PER_PAGE));
       } catch (err) {
         setError(`Failed to load products for category. ${err.message}`);
-        
+        console.error("Error fetching products for category:", err);
         setProducts([]); // Clear products on error
       } finally {
         setIsLoading(false);
@@ -254,7 +252,41 @@ export default function CategoriesPage() {
                   </div>
                 ) : (
                   // Products Grid
-                  <ProductGrid products={products} />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {products.map((product) => (
+                      <div
+                        key={product.id}
+                        className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105"
+                      >
+                        <img
+                          alt={product.title}
+                          className="w-full h-48 object-cover"
+                          src={
+                            product.images[0] ||
+                            `https://placehold.co/400x300/FDFBF8/07484A?text=No+Image`
+                          }
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = `https://placehold.co/400x300/FDFBF8/07484A?text=${product.title.replace(/\s/g, "+") || "Product"}`;
+                          }}
+                        />
+                        <div className="p-4">
+                          <h3 className="text-lg font-semibold text-primary mb-1">
+                            {product.title}
+                          </h3>
+                          <p className="text-gray-600 dark:text-gray-300 text-sm mb-2 line-clamp-2">
+                            {product.description}
+                          </p>
+                          <p className="text-xl font-bold text-green-600 dark:text-green-400">
+                            ${product.price}
+                          </p>
+                          <button className="mt-4 w-full bg-primary text-white py-2 rounded-full font-semibold hover:bg-primary-light transition-colors duration-200">
+                            View Details
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             )}

@@ -5,7 +5,6 @@ import { fetchCategories } from "../api/categories";
 import { fetchProductsByCategory } from "../api/products";
 
 import DefaultLayout from "@/layouts/default";
-import ProductGrid from "@/components/ProductGrid";
 
 const PRODUCTS_PER_PAGE = 10;
 
@@ -36,7 +35,7 @@ export default function CategoriesPage() {
         setCategories(validCategories);
       } catch (err) {
         setError("Failed to load categories. Please try again later.");
-        console.error("Error fetching categories:", err);
+        console.error("Error setting categories data:", err);
       } finally {
         setIsLoading(false);
       }
@@ -73,7 +72,7 @@ export default function CategoriesPage() {
         setProducts(validProducts.slice(0, PRODUCTS_PER_PAGE));
       } catch (err) {
         setError(`Failed to load products for category. ${err.message}`);
-        
+        console.error("Error fetching products for category:", err);
         setProducts([]); // Clear products on error
       } finally {
         setIsLoading(false);

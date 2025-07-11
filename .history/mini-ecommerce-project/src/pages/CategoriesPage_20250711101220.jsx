@@ -36,7 +36,7 @@ export default function CategoriesPage() {
         setCategories(validCategories);
       } catch (err) {
         setError("Failed to load categories. Please try again later.");
-        console.error("Error fetching categories:", err);
+        
       } finally {
         setIsLoading(false);
       }
