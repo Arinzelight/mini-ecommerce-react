@@ -26,7 +26,9 @@ export default function ProductCard({ product }) {
           {product.category?.name}
         </p>
         <div className="flex items-center justify-between">
-          <span className="text-primary font-bold">${product.price}</span>
+          <span className="text-primary dark:text-secondary-mint font-bold">
+            ${product.price}
+          </span>
         </div>
       </div>
     </div>

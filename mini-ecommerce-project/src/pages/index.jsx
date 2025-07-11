@@ -61,10 +61,10 @@ export default function IndexPage() {
 
   return (
     <DefaultLayout>
-      <section className="flex flex-col gap-8 py-10 px-4 bg-secondary-blush dark:bg-primary-light rounded-md transition-all duration-500 min-h-screen">
+      <section className="flex flex-col gap-8 py-10 px-4 bg-secondary-blush dark:bg-transparent rounded-md transition-all duration-500 min-h-screen">
         {/* ----------- WELCOME SECTION ----------- */}
         <div className="max-w-3xl mx-auto text-center space-y-4">
-          <h1 className="text-3xl sm:text-4xl font-bold text-primary">
+          <h1 className="text-3xl sm:text-4xl font-bold text-primary dark:text-secondary-mint">
             Welcome to Our Exclusive Store
           </h1>
           <p className="text-gray-700 dark:text-gray-200 text-lg">
@@ -79,7 +79,7 @@ export default function IndexPage() {
 
         {/* ----------- CATEGORY LIST ----------- */}
         <div>
-          <h2 className="text-xl font-semibold text-primary mb-4">
+          <h2 className="text-xl font-semibold text-primary dark:text-secondary-peach mb-4">
             Categories
           </h2>
           <div className="flex flex-wrap gap-3">
@@ -96,7 +96,7 @@ export default function IndexPage() {
 
         {/* ----------- PRODUCT DISPLAY ----------- */}
         <div>
-          <h2 className="text-xl font-semibold text-primary mb-4">
+          <h2 className="text-xl font-semibold text-primary dark:text-secondary-mint mb-4">
             Sample Products
           </h2>
 
@@ -118,7 +118,7 @@ export default function IndexPage() {
               {/* Previous Button */}
               {page > 0 && (
                 <button
-                  className="bg-white dark:bg-gray-900 border border-primary text-primary px-6 py-2 rounded-full hover:bg-primary hover:text-white transition-all font-medium"
+                  className="bg-primary dark:text-secondary-mint dark:bg-gray-900 border border-primary text-primary px-6 py-2 rounded-full hover:bg-primary hover:text-white transition-all font-medium"
                   onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
                 >
                   ← Previous

@@ -18,7 +18,7 @@ export default function DefaultLayout({ children }) {
           title="heroui.com homepage"
         >
           <span className="text-default-600">Powered by</span>
-          <p className="text-primary">KNODI</p>
+          <p className="text-primary dark:text-secondary-mint">KNODI</p>
         </Link>
       </footer>
     </div>

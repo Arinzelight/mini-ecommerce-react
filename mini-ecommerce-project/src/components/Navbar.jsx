@@ -1,14 +1,18 @@
 /* eslint-disable prettier/prettier */
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import clsx from "clsx";
+import { useSelector } from "react-redux";
 
 import { siteConfig } from "../config/site";
 
-import { Logo, SearchIcon, CartIcon } from "./icons";
+import { Logo, SearchIcon, CartIcon, HeartIcon } from "./icons";
 import { ThemeSwitch } from "./theme-switch";
 
 export const Navbar = () => {
+  // Get favorite products from Redux store
+  const favoriteItems = useSelector((state) => state.favorites.items);
+
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
@@ -37,13 +41,13 @@ export const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center">
-          <a
+          <Link
             className="flex items-center gap-2 text-primary hover:text-primary-light font-bold text-lg transition-colors duration-200"
-            href="/"
+            to={`/`}
           >
             <Logo className="text-primary" size={32} />
             KNODI
-          </a>
+          </Link>
         </div>
 
         {/* Desktop Navigation */}
@@ -54,17 +58,17 @@ export const Navbar = () => {
 
               return (
                 <li key={item.href}>
-                  <a
+                  <Link
                     className={clsx(
                       "font-medium transition-colors duration-200 px-3 py-1 rounded-full",
                       isActive
                         ? "bg-primary text-white"
                         : "text-primary hover:text-primary-light"
                     )}
-                    href={item.href}
+                    to={item.href}
                   >
                     {item.label}
-                  </a>
+                  </Link>
                 </li>
               );
             })}
@@ -74,9 +78,9 @@ export const Navbar = () => {
         {/* Right Icons */}
         <div className="flex items-center space-x-6">
           {/* Cart */}
-          <a
+          <Link
             className="hidden sm:relative sm:flex text-primary hover:text-primary-light transition-colors duration-200"
-            href="/cart"
+            to={`/cart`}
           >
             <CartIcon className="w-6 h-6 text-primary" />
             {cartItemCount > 0 && (
@@ -84,7 +88,20 @@ export const Navbar = () => {
                 {cartItemCount}
               </span>
             )}
-          </a>
+          </Link>
+          
+          {/* Favorites */}
+          <Link
+            className="hidden sm:relative sm:flex text-primary hover:text-primary-light transition-colors duration-200"
+            to={`/favorites`}
+          >
+            <HeartIcon className="w-6 h-6 text-primary" />
+            {favoriteItems.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                {favoriteItems.length}
+              </span>
+            )}
+          </Link>
 
           {/* Desktop Search */}
           <div
@@ -163,18 +180,18 @@ export const Navbar = () => {
 
             return (
               <li key={`${item.href}-${index}`}>
-                <a
+                <Link
                   className={clsx(
                     "block transition-colors duration-200 text-lg px-3 py-2 rounded-md",
                     isActive
                       ? "bg-primary text-white"
                       : "text-primary hover:text-primary-light"
                   )}
-                  href={item.href}
+                  to={item.href}
                   onClick={toggleMobileMenu}
                 >
                   {item.label}
-                </a>
+                </Link>
               </li>
             );
           })}

@@ -50,10 +50,12 @@ function ProductPage() {
   return (
     <DefaultLayout>
       {/* Main wrapper for spacing and background */}
-      <div className="flex flex-col gap-8 py-5 px-4 bg-secondary-blush dark:bg-primary-light rounded-md transition-all duration-500 min-h-screen">
-        <h1 className="text-center text-5xl font-semibold">Products</h1>
+      <div className="flex flex-col gap-8 py-5 px-4 bg-secondary-blush dark:bg-transparent rounded-md transition-all duration-500 min-h-screen">
+        <h1 className="text-center text-5xl font-semibold dark:text-secondary-mint">
+          Products
+        </h1>
 
-        <section className="flex flex-col gap-8 py-10 px-4 bg-secondary-blush dark:bg-primary-light rounded-md transition-all duration-500 min-h-screen">
+        <section className="flex flex-col gap-8 py-10 px-4 bg-secondary-blush dark:bg-transparent rounded-md transition-all duration-500 min-h-screen">
           {/* Search Input Field */}
           <div className="max-w-md w-full mx-auto">
             <SearchInput

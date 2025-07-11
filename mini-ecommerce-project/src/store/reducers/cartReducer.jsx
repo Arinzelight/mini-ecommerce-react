@@ -5,6 +5,7 @@ import {
   REMOVE_FROM_CART,
   DECREASE_QTY,
   CLEAR_CART,
+  INCREASE_QTY,
 } from "@/store/actionTypes";
 
 const initialState = {
@@ -30,6 +31,24 @@ export const cartReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         items: [...state.items, { ...payload, quantity: 1 }],
+      };
+    }
+
+    case INCREASE_QTY: {
+      const item = state.items.find((i) => i.id === payload);
+
+      if (item?.quantity > 1) {
+        return {
+          ...state,
+          items: state.items.map((i) =>
+            i.id === payload ? { ...i, quantity: i.quantity + 1 } : i,
+          ),
+        };
+      }
+
+      return {
+        ...state,
+        items: state.items.filter((i) => i.id !== payload),
       };
     }
 
