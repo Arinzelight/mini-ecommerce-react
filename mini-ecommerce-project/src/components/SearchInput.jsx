@@ -1,6 +1,16 @@
 /* eslint-disable prettier/prettier */
 import { SearchIcon } from "@/components/icons";
 
+/** * SearchInput component for searching products
+ * - Displays a search input field with an icon
+ * * Props:
+ * - value: Current search term
+ * - onChange: Function to handle input changes
+ * - placeholder: Placeholder text for the input
+ * - className: Additional CSS classes for styling
+ * * Returns:
+ * - JSX element with a search input field
+ * */
 export default function SearchInput({
   value,
   onChange,

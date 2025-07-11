@@ -2,6 +2,11 @@
 
 import FavoriteButton from "./FavoriteButton";
 
+/**
+ *  ProductCard component to display product details
+ *  - The product object containing details like title, price, and images.
+ * - JSX element representing the product card
+ * */
 export default function ProductCard({ product }) {
   return (
     <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">

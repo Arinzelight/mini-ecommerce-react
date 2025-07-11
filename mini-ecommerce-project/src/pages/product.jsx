@@ -3,45 +3,58 @@ import { useEffect, useState } from "react";
 import { Spinner } from "@heroui/spinner";
 import { button as buttonStyles } from "@heroui/theme";
 
+// API function to fetch products
 import { fetchProducts } from "@/api/products";
+// UI components
 import SearchInput from "@/components/SearchInput";
 import DefaultLayout from "@/layouts/default";
 import ProductDisplay from "@/components/ProductDisplay";
 
+// Number of products per page for pagination
 const PRODUCTS_PER_PAGE = 10;
 
+/**
+ * ProductPage Component
+ * - Displays a searchable and paginated list of products.
+ * - Uses a layout wrapper, custom search input, and grid display.
+ */
 function ProductPage() {
-  const [products, setProducts] = useState([]);
-  const [page, setPage] = useState(0);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
+  // ---------- STATE ----------
+  const [products, setProducts] = useState([]); // Product data
+  const [page, setPage] = useState(0); // Pagination: current page
+  const [searchTerm, setSearchTerm] = useState(""); // Current search query
+  const [loading, setLoading] = useState(false); // Loader toggle
+  const [hasMore, setHasMore] = useState(true); // Flag to disable "Next" button
 
-
+  // ---------- FETCH PRODUCTS ----------
   useEffect(() => {
     const loadProducts = async () => {
-      setLoading(true);
+      setLoading(true); // Start loader
+
       const data = await fetchProducts(page, PRODUCTS_PER_PAGE, searchTerm);
 
       setProducts(data);
-      setHasMore(data.length === PRODUCTS_PER_PAGE);
-      setLoading(false);
+      setHasMore(data.length === PRODUCTS_PER_PAGE); // If fewer items returned, no more pages
+      setLoading(false); // Stop loader
     };
 
     loadProducts();
   }, [page, searchTerm]);
 
+  // ---------- HANDLE SEARCH ----------
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-    setPage(0); // Reset to first page when searching
+    setPage(0); // Reset pagination when a new search is performed
   };
 
   return (
     <DefaultLayout>
+      {/* Main wrapper for spacing and background */}
       <div className="flex flex-col gap-8 py-5 px-4 bg-secondary-blush dark:bg-primary-light rounded-md transition-all duration-500 min-h-screen">
         <h1 className="text-center text-5xl font-semibold">Products</h1>
+
         <section className="flex flex-col gap-8 py-10 px-4 bg-secondary-blush dark:bg-primary-light rounded-md transition-all duration-500 min-h-screen">
-          {/* Search Input */}
+          {/* Search Input Field */}
           <div className="max-w-md w-full mx-auto">
             <SearchInput
               placeholder="Search products by name..."
@@ -49,27 +62,34 @@ function ProductPage() {
               onChange={handleSearch}
             />
           </div>
+
+          {/* Product Display Section */}
           <div>
             {loading ? (
+              // Loader displayed during fetch
               <div className="flex justify-center items-center py-10">
                 <Spinner color="primary" size="lg" />
               </div>
             ) : (
+              // Product Grid
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {products.map((product) => (
                   <ProductDisplay key={product.id} product={product} />
                 ))}
+
+                {/* No Results Message */}
                 {!hasMore && products.length === 0 && (
-                  <div className="col-span-1 sm:col-span-2 md:col-span-3 text-center text-primary font-semibold">
+                  <div className="col-span-full text-center text-primary font-semibold">
                     No products found. Try a different search term.
                   </div>
                 )}
               </div>
             )}
 
-            {/* Pagination */}
+            {/* Pagination Buttons */}
             {!loading && (
               <div className="flex justify-center gap-4 mt-6">
+                {/* Previous Page Button */}
                 {page > 0 && (
                   <button
                     className={buttonStyles({
@@ -81,6 +101,8 @@ function ProductPage() {
                     Previous
                   </button>
                 )}
+
+                {/* Next Page Button */}
                 {hasMore && (
                   <button
                     className={buttonStyles({

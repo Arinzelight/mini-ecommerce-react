@@ -1,7 +1,18 @@
 /* eslint-disable prettier/prettier */
 import * as React from "react";
 
-
+/** * Icons component to export various SVG icons used in the application
+ * - Exports icons like Logo, SearchIcon, CartIcon, GithubIcon, MoonFilledIcon, SunFilledIcon, HeartFilledIcon, HeartIcon
+ * - Each icon is a functional component that returns an SVG element
+ * * Usage:
+ * - Import the desired icon from this file and use it as a React component
+ * * Example:
+ * import { Logo, SearchIcon } from './icons';
+ * <Logo size={32} />
+  * <SearchIcon size={24} />
+  * * Note:
+ * - Each icon can accept props like size, width, height, and other SVG attributes
+ * */
 export const Logo = ({ size = 32, ...props }) => (
   <svg fill="none" height={size} viewBox="0 0 32 32" width={size} {...props}>
     <path

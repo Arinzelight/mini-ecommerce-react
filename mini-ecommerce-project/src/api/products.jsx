@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 const BASE_URL = "https://api.escuelajs.co/api/v1";
 
+// Fetch product
 export const fetchProducts = async (page = 0, limit = 10, title = "") => {
   try {
     const query = new URLSearchParams({

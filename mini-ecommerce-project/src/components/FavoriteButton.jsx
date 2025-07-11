@@ -1,4 +1,3 @@
-// src/components/FavoriteButton.jsx
 /* eslint-disable prettier/prettier */
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@heroui/button";
@@ -7,6 +6,13 @@ import { HeartIcon, HeartFilledIcon } from "./icons";
 
 import { TOGGLE_FAVORITE } from "@/store/actionTypes";
 
+/**
+ * FavoriteButton component to toggle product as favorite
+ * - Uses Redux to manage favorite state
+ * - Displays filled heart if product is a favorite, otherwise an outline heart
+ * - The product object to toggle as favorite
+ * - Button element with heart icon
+ * */
 export default function FavoriteButton({ product }) {
   const dispatch = useDispatch();
 

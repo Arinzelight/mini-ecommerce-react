@@ -1,8 +1,14 @@
 /* eslint-disable prettier/prettier */
 
 import { Button } from "@heroui/button";
+
 import { HeartIcon } from "./icons";
 
+/** 
+ * ProductDisplay component to display individual product details
+ - The product object containing details like title, description, price, and images.
+ - JSX element representing the product display  
+ * */
 export default function ProductDisplay({ product }) {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
