@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 import * as React from "react";
 
-// ! new icons
 
 export const Logo = ({ size = 32, ...props }) => (
   <svg fill="none" height={size} viewBox="0 0 32 32" width={size} {...props}>
@@ -60,8 +59,6 @@ export const CartIcon = ({ size = 24, ...props }) => (
     />
   </svg>
 );
-
-// ! template icons
 
 export const GithubIcon = ({ size = 24, width, height, ...props }) => (
   <svg
