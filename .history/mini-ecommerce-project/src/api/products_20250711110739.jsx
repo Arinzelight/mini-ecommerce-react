@@ -55,3 +55,4 @@ export const fetchProductsByCategory = async (
     return [];
   }
 };
+

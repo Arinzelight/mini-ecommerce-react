@@ -4,6 +4,7 @@ import { Spinner } from "@heroui/spinner";
 import { button as buttonStyles } from "@heroui/theme";
 
 import { fetchProducts } from "@/api/products";
+import ProductCard from "@/components/ProductCard";
 import SearchInput from "@/components/SearchInput";
 import DefaultLayout from "@/layouts/default";
 import ProductDisplay from "@/components/ProductDisplay";

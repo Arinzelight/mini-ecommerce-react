@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 
 import { Button } from "@heroui/button";
-import { HeartIcon } from "./icons";
 
 export default function ProductDisplay({ product }) {
   return (

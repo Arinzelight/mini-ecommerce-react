@@ -55,3 +55,20 @@ export const fetchProductsByCategory = async (
     return [];
   }
 };
+
+export const fetchOneProductByCategory = async (categoryId) => {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/categories/${categoryId}/products?offset=0&limit=1`
+    );
+
+    if (!res.ok) throw new Error("Failed to fetch product by category");
+    const data = await res.json();
+
+    return data[0] || null;
+  } catch (error) {
+    console.error("Product-by-category fetch error:", error);
+
+    return null;
+  }
+};

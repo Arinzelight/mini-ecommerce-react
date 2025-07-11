@@ -1,8 +1,5 @@
 /* eslint-disable prettier/prettier */
 
-import { Button } from "@heroui/button";
-import { HeartIcon } from "./icons";
-
 export default function ProductDisplay({ product }) {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
@@ -16,18 +13,11 @@ export default function ProductDisplay({ product }) {
         onError={(e) => {
           e.target.onerror = null;
           e.target.src = `https://placehold.co/400x300/FDFBF8/07484A?text=${encodeURIComponent(
-            product.title || "Product"
+            product.title || "Product",
           )}`;
         }}
       />
-      <Button
-        isIconOnly
-        aria-label="Like"
-        className="absolute top-3 right-3  dark:bg-gray-800 rounded-full p-2 shadow hover:scale-105 transition-transform"
-        color="danger"
-      >
-        <HeartIcon />
-      </Button>
+      
       <div className="p-4">
         <h3 className="text-lg font-semibold text-primary mb-1">
           {product.title}

@@ -4,7 +4,6 @@ import { useLocation } from "react-router-dom";
 import clsx from "clsx";
 
 import { siteConfig } from "../config/site";
-
 import { Logo, SearchIcon, CartIcon } from "./icons";
 import { ThemeSwitch } from "./theme-switch";
 
@@ -55,13 +54,13 @@ export const Navbar = () => {
               return (
                 <li key={item.href}>
                   <a
+                    href={item.href}
                     className={clsx(
                       "font-medium transition-colors duration-200 px-3 py-1 rounded-full",
                       isActive
                         ? "bg-primary text-white"
                         : "text-primary hover:text-primary-light"
                     )}
-                    href={item.href}
                   >
                     {item.label}
                   </a>
@@ -164,14 +163,14 @@ export const Navbar = () => {
             return (
               <li key={`${item.href}-${index}`}>
                 <a
+                  href={item.href}
+                  onClick={toggleMobileMenu}
                   className={clsx(
                     "block transition-colors duration-200 text-lg px-3 py-2 rounded-md",
                     isActive
                       ? "bg-primary text-white"
                       : "text-primary hover:text-primary-light"
                   )}
-                  href={item.href}
-                  onClick={toggleMobileMenu}
                 >
                   {item.label}
                 </a>

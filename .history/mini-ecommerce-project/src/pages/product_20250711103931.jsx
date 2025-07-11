@@ -4,9 +4,9 @@ import { Spinner } from "@heroui/spinner";
 import { button as buttonStyles } from "@heroui/theme";
 
 import { fetchProducts } from "@/api/products";
+import ProductCard from "@/components/ProductCard";
 import SearchInput from "@/components/SearchInput";
 import DefaultLayout from "@/layouts/default";
-import ProductDisplay from "@/components/ProductDisplay";
 
 const PRODUCTS_PER_PAGE = 10;
 
@@ -57,7 +57,7 @@ function ProductPage() {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {products.map((product) => (
-                  <ProductDisplay key={product.id} product={product} />
+                  <ProductDi key={product.id} product={product} />
                 ))}
                 {!hasMore && products.length === 0 && (
                   <div className="col-span-1 sm:col-span-2 md:col-span-3 text-center text-primary font-semibold">

@@ -3,40 +3,40 @@ import { useEffect, useState } from "react";
 import { Spinner } from "@heroui/spinner";
 
 import DefaultLayout from "@/layouts/default";
+import { fetchProducts } from "@/api/products";
 import { fetchCategories } from "@/api/categories";
-import { fetchProductsByCategory } from "@/api/products";
 import ProductCard from "@/components/ProductCard";
 
-const CATEGORIES_PER_PAGE = 3;
+const PRODUCTS_PER_PAGE = 10;
 
 export default function IndexPage() {
   const [categories, setCategories] = useState([]);
-  const [categoryProducts, setCategoryProducts] = useState([]);
+  const [products, setProducts] = useState([]);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
-    const loadData = async () => {
+    const loadCategories = async () => {
+      const data = await fetchCategories();
+
+      setCategories(data.slice(0, 6));
+    };
+
+    loadCategories();
+  }, []);
+
+  useEffect(() => {
+    const loadProducts = async () => {
       setLoading(true);
-      const allCategories = await fetchCategories();
+      const data = await fetchProducts(page, PRODUCTS_PER_PAGE);
 
-      const paginated = allCategories.slice(
-        page * CATEGORIES_PER_PAGE,
-        (page + 1) * CATEGORIES_PER_PAGE
-      );
-      setCategories(paginated);
-      setHasMore((page + 1) * CATEGORIES_PER_PAGE < allCategories.length);
-
-      const productFetches = await Promise.all(
-        paginated.map((cat) => fetchProductsByCategory(cat.id, 0, 1))
-      );
-      const products = productFetches.map((list) => list[0]).filter(Boolean);
-      setCategoryProducts(products);
+      setProducts(data);
+      setHasMore(data.length === PRODUCTS_PER_PAGE);
       setLoading(false);
     };
 
-    loadData();
+    loadProducts();
   }, [page]);
 
   return (
@@ -60,7 +60,7 @@ export default function IndexPage() {
         {/* Categories */}
         <div>
           <h2 className="text-xl font-semibold text-primary mb-4">
-            Categories
+            Top Categories
           </h2>
           <div className="flex flex-wrap gap-3">
             {categories.map((cat) => (
@@ -77,7 +77,7 @@ export default function IndexPage() {
         {/* Sample Products */}
         <div>
           <h2 className="text-xl font-semibold text-primary mb-4">
-            Sample Products
+            Featured Products
           </h2>
 
           {loading ? (
@@ -86,9 +86,14 @@ export default function IndexPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {categoryProducts.map((product) => (
+              {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
+              {!hasMore && products.length === 0 && (
+                <div className="col-span-full text-center text-primary font-semibold">
+                  No products found.
+                </div>
+              )}
             </div>
           )}
 

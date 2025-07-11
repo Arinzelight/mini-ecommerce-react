@@ -10,7 +10,9 @@ export const fetchProducts = async (page = 0, limit = 10, title = "") => {
 
     if (title) query.append("title", title);
 
-    const res = await fetch(`${BASE_URL}/products?${query.toString()}`);
+    const res = await fetch(
+      `${BASE_URL}/products?${query.toString()}`,
+    );
 
     if (!res.ok) throw new Error("Failed to fetch products");
 
@@ -23,11 +25,7 @@ export const fetchProducts = async (page = 0, limit = 10, title = "") => {
 };
 
 // Fetch products by category
-export const fetchProductsByCategory = async (
-  categoryId,
-  offset = 0,
-  limit = 10
-) => {
+export const fetchProductsByCategory = async (categoryId, offset = 0, limit = 10) => {
   try {
     const query = new URLSearchParams({
       offset: offset.toString(),
@@ -36,13 +34,11 @@ export const fetchProductsByCategory = async (
 
     // API call to the specific category products endpoint
     const res = await fetch(
-      `${BASE_URL}/categories/${categoryId}/products?${query.toString()}`
+      `${BASE_URL}/categories/${categoryId}/products?${query.toString()}`,
     );
 
     if (!res.ok) {
-      throw new Error(
-        `Failed to fetch products for category ${categoryId}. Status: ${res.status}`
-      );
+      throw new Error(`Failed to fetch products for category ${categoryId}. Status: ${res.status}`);
     }
 
     const data = await res.json();
@@ -55,3 +51,4 @@ export const fetchProductsByCategory = async (
     return [];
   }
 };
+
