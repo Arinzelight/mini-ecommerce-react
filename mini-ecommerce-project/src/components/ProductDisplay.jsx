@@ -1,8 +1,5 @@
 /* eslint-disable prettier/prettier */
-
-import { Button } from "@heroui/button";
-
-import { HeartIcon } from "./icons";
+import FavoriteButton from "./FavoriteButton";
 
 /** 
  * ProductDisplay component to display individual product details
@@ -26,16 +23,10 @@ export default function ProductDisplay({ product }) {
           )}`;
         }}
       />
-      <Button
-        isIconOnly
-        aria-label="Like"
-        className="absolute top-3 right-3  dark:bg-gray-800 rounded-full p-2 shadow hover:scale-105 transition-transform"
-        color="danger"
-      >
-        <HeartIcon />
-      </Button>
+      <FavoriteButton product={product} />
+      {/* Product Details */}
       <div className="p-4">
-        <h3 className="text-lg font-semibold text-primary mb-1">
+        <h3 className="text-lg font-semibold text-primary dark:text-secondary-mint mb-1">
           {product.title}
         </h3>
         <p className="text-gray-600 dark:text-gray-300 text-sm mb-2 line-clamp-2">

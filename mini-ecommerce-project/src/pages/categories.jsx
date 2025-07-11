@@ -121,7 +121,7 @@ export default function CategoriesPage() {
   return (
     <DefaultLayout>
       <div className="container mx-auto p-4 py-8 md:py-10">
-        <h1 className="text-4xl md:text-5xl font-bold text-center text-primary mb-8">
+        <h1 className="text-4xl md:text-5xl font-bold text-center pb-10 text-primary mb-8 dark:text-secondary-mint">
           Explore by Category
         </h1>
 
@@ -131,7 +131,7 @@ export default function CategoriesPage() {
             className="lg:w-1/4 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md
                         lg:sticky lg:top-[4.5rem] lg:self-start lg:max-h-[calc(100vh-4.5rem)] lg:overflow-y-auto"
           >
-            <h2 className="text-xl font-semibold text-primary mb-4">
+            <h2 className="text-xl font-semibold text-primary dark:text-secondary-mint mb-4">
               Categories
             </h2>
 
@@ -167,8 +167,8 @@ export default function CategoriesPage() {
                   className={`w-full text-left p-2 rounded-md transition-colors duration-200
                     ${
                       selectedCategory === null
-                        ? "bg-primary text-white"
-                        : "text-primary hover:bg-primary-light hover:text-white"
+                        ? "bg-primary dark:text-secondary-mint text-white"
+                        : "text-primary dark:text-secondary-mint hover:bg-primary-light hover:text-white"
                     }`}
                   onClick={handleViewAllCategoriesClick}
                 >
@@ -181,8 +181,8 @@ export default function CategoriesPage() {
                     className={`w-full text-left p-2 rounded-md transition-colors duration-200
                       ${
                         selectedCategory === category.id
-                          ? "bg-primary text-white"
-                          : "text-primary hover:bg-primary-light hover:text-white"
+                          ? "bg-primary dark:text-secondary-mint text-white"
+                          : "text-primary dark:text-secondary-mint hover:bg-primary-light hover:text-white"
                       }`}
                     onClick={() => handleCategoryClick(category.id)}
                   >
@@ -229,7 +229,7 @@ export default function CategoriesPage() {
             ) : (
               // Display Product Cards
               <div>
-                <h2 className="text-3xl font-bold text-primary mb-6">
+                <h2 className="text-3xl font-bold text-primary mb-6 dark:text-secondary-lavender">
                   Products in{" "}
                   {categories.find((cat) => cat.id === selectedCategory)
                     ?.name || "Selected Category"}
