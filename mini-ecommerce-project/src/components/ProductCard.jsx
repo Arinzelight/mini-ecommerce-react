@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { Button } from "@heroui/button";
 
-import { HeartIcon } from "./icons";
+import FavoriteButton from "./FavoriteButton";
 
 export default function ProductCard({ product }) {
   return (
@@ -12,14 +11,7 @@ export default function ProductCard({ product }) {
           className="w-full h-48 object-cover rounded-t-xl"
           src={product.images?.[0]}
         />
-        <Button
-          isIconOnly
-          aria-label="Like"
-          className="absolute top-3 right-3  dark:bg-gray-800 rounded-full p-2 shadow hover:scale-105 transition-transform"
-          color="danger"
-        >
-          <HeartIcon />
-        </Button>
+        <FavoriteButton product={product} />
       </div>
       <div className="p-4 space-y-2">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white truncate">
