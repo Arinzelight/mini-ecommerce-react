@@ -7,7 +7,7 @@ import { fetchProductsByCategory } from "../api/products";
 import DefaultLayout from "@/layouts/default";
 import ProductGrid from "@/components/ProductGrid";
 
-const PRODUCTS_PER_PAGE = 10;
+
 
 export default function CategoriesPage() {
   // State for categories display
@@ -22,6 +22,9 @@ export default function CategoriesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const PRODUCTS_PER_PAGE = 10;
+
+  // Fetching categories 
   useEffect(() => {
     const getCategoriesData = async () => {
       setIsLoading(true);
@@ -44,11 +47,11 @@ export default function CategoriesPage() {
     getCategoriesData();
   }, []);
 
-  // --- Effect for fetching products when a category is selected ---
+  // fetching products from seleted category ---
   useEffect(() => {
     const getProductsForCategory = async () => {
       if (!selectedCategory) {
-        setProducts([]); // Clear products if category is deselected
+        setProducts([]); 
 
         return;
       }
@@ -57,7 +60,6 @@ export default function CategoriesPage() {
       setError(null);
 
       try {
-        // Fetch ALL products for the category
         const allProducts = await fetchProductsByCategory(selectedCategory);
 
         // Filter out products with null/empty titles or invalid image URLs
@@ -73,14 +75,14 @@ export default function CategoriesPage() {
       } catch (err) {
         setError(`Failed to load products for category. ${err.message}`);
         
-        setProducts([]); // Clear products on error
+        setProducts([]); 
       } finally {
         setIsLoading(false);
       }
     };
 
     getProductsForCategory();
-  }, [selectedCategory]); // Re-run only when selectedCategory changes
+  }, [selectedCategory]); 
 
   // --- Handlers ---
   const handleCategoryClick = (categoryId) => {
@@ -88,7 +90,7 @@ export default function CategoriesPage() {
   };
 
   const handleViewAllCategoriesClick = () => {
-    setSelectedCategory(null); // Deselect category to show all category cards
+    setSelectedCategory(null);
     setSearchTerm("");
   };
 

@@ -1,6 +1,17 @@
 /* eslint-disable prettier/prettier */
 import FavoriteButton from "./FavoriteButton";
 
+// Utility function to generate a slug from a string
+const generateSlug = (title) => {
+  if (!title) return ''; // Handle empty or null titles
+  return title
+    .toLowerCase() // Convert to lowercase
+    .replace(/[^a-z0-9\s-]/g, '') // Remove non-alphanumeric characters except spaces and hyphens
+    .replace(/\s+/g, '-') // Replace spaces with single hyphens
+    .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+};
+
+
 /** 
  * ProductDisplay component to display individual product details
  - The product object containing details like title, description, price, and images.
@@ -36,7 +47,7 @@ export default function ProductDisplay({ product }) {
           ${product.price}
         </p>
         <button className="mt-4 w-full bg-primary text-white py-2 rounded-full font-semibold hover:bg-primary-light transition-colors duration-200">
-          View Details
+        <a href={`/products/${generateSlug(product.title)}`} className="block text-center text-white w-full">View Details</a>
         </button>
       </div>
     </div>
