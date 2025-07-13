@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from "react";
+import { Spinner } from "@heroui/spinner";
 
 import { fetchCategories } from "../api/categories";
 import { fetchProductsByCategory } from "../api/products";
@@ -104,7 +105,12 @@ export default function CategoriesPage() {
     return (
       <DefaultLayout>
         <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-primary">
-          <p className="text-2xl font-semibold">Loading categories...</p>
+          <div className="flex flex-col items-center">
+            <Spinner color="primary" size="lg" />
+            <h2 className="text-xl font-semibold text-primary dark:text-secondary-mint mb-4">
+              Loading categories...
+            </h2>
+          </div>
         </div>
       </DefaultLayout>
     );

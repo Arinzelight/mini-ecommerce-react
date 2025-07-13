@@ -102,7 +102,12 @@ export default function IndexPage() {
 
           {loading ? (
             <div className="flex justify-center items-center py-10">
-              <Spinner color="primary" size="lg" />
+              <div className="flex flex-col items-center">
+                <Spinner color="primary" size="lg" />
+                <h2 className="text-xl font-semibold text-primary dark:text-secondary-mint mb-4">
+                  Loading Sample products...
+                </h2>
+              </div>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">

@@ -70,7 +70,12 @@ function ProductPage() {
             {loading ? (
               // Loader displayed during fetch
               <div className="flex justify-center items-center py-10">
-                <Spinner color="primary" size="lg" />
+                <div className="flex flex-col items-center">
+                  <Spinner color="primary" size="lg" />
+                  <h2 className="text-xl font-semibold text-primary dark:text-secondary-mint mb-4">
+                    Loading products...
+                  </h2>
+                </div>
               </div>
             ) : (
               // Product Grid
