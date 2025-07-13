@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from "react";
+import { Spinner } from "@heroui/spinner";
 
 import { fetchCategories } from "../api/categories";
 import { fetchProductsByCategory } from "../api/products";
@@ -7,7 +8,7 @@ import { fetchProductsByCategory } from "../api/products";
 import DefaultLayout from "@/layouts/default";
 import ProductGrid from "@/components/ProductGrid";
 
-const PRODUCTS_PER_PAGE = 10;
+
 
 export default function CategoriesPage() {
   // State for categories display
@@ -22,6 +23,9 @@ export default function CategoriesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const PRODUCTS_PER_PAGE = 10;
+
+  // Fetching categories 
   useEffect(() => {
     const getCategoriesData = async () => {
       setIsLoading(true);
@@ -44,11 +48,11 @@ export default function CategoriesPage() {
     getCategoriesData();
   }, []);
 
-  // --- Effect for fetching products when a category is selected ---
+  // fetching products from seleted category ---
   useEffect(() => {
     const getProductsForCategory = async () => {
       if (!selectedCategory) {
-        setProducts([]); // Clear products if category is deselected
+        setProducts([]); 
 
         return;
       }
@@ -57,7 +61,6 @@ export default function CategoriesPage() {
       setError(null);
 
       try {
-        // Fetch ALL products for the category
         const allProducts = await fetchProductsByCategory(selectedCategory);
 
         // Filter out products with null/empty titles or invalid image URLs
@@ -73,14 +76,14 @@ export default function CategoriesPage() {
       } catch (err) {
         setError(`Failed to load products for category. ${err.message}`);
         
-        setProducts([]); // Clear products on error
+        setProducts([]); 
       } finally {
         setIsLoading(false);
       }
     };
 
     getProductsForCategory();
-  }, [selectedCategory]); // Re-run only when selectedCategory changes
+  }, [selectedCategory]); 
 
   // --- Handlers ---
   const handleCategoryClick = (categoryId) => {
@@ -88,7 +91,7 @@ export default function CategoriesPage() {
   };
 
   const handleViewAllCategoriesClick = () => {
-    setSelectedCategory(null); // Deselect category to show all category cards
+    setSelectedCategory(null);
     setSearchTerm("");
   };
 
@@ -102,7 +105,12 @@ export default function CategoriesPage() {
     return (
       <DefaultLayout>
         <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-primary">
-          <p className="text-2xl font-semibold">Loading categories...</p>
+          <div className="flex flex-col items-center">
+            <Spinner color="primary" size="lg" />
+            <h2 className="text-xl font-semibold text-primary dark:text-secondary-mint mb-4">
+              Loading categories...
+            </h2>
+          </div>
         </div>
       </DefaultLayout>
     );

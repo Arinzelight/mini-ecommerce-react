@@ -56,3 +56,27 @@ export const fetchProductsByCategory = async (
     return [];
   }
 };
+
+// Fetch product by slug
+export const fetchProductDetails = async (productSlug) => { 
+  try {
+    const res = await fetch(`${BASE_URL}/products/slug/${productSlug}`);
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch product with slug "${productSlug}". Status: ${res.status}`);
+    }
+
+    const data = await res.json();
+
+    // The API might return an object with a 'statusCode' if not found,
+    // instead of a direct 404 HTTP status code. Check for this.
+    if (data && data.statusCode === 404) {
+      throw new Error(`Product with slug "${productSlug}" not found.`);
+    }
+
+    return data; 
+  } catch (error) {
+    console.error(`Error fetching product with slug "${productSlug}":`, error);
+    return null; 
+  }
+};
