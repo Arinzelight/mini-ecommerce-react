@@ -8,6 +8,7 @@ const ProductPage = lazy(() => import("./pages/product"));
 const CategoriesPage = lazy(() => import("./pages/categories"));
 const FavoritesPage = lazy(() => import("./pages/favorites"));
 const ProductDetailPage = lazy(() => import("./pages/ProductDetails"));
+const CartPage = lazy(() => import("./pages/CartPage"));
 
 // Optional: fallback UI
 const Loading = () => (
@@ -24,6 +25,7 @@ function App() {
         <Route element={<ProductPage />} path="/products" />
         <Route element={<CategoriesPage />} path="/categories" />
         <Route element={<FavoritesPage />} path="/favorites" />
+        <Route element={<CartPage />} path="/cart" />
         <Route element={<ProductDetailPage />} path="/products/:productSlug" />
       </Routes>
     </Suspense>
