@@ -2,13 +2,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+// Import action type
 
 import { fetchProductDetails, fetchProductsByCategory } from "../api/products";
 
 import DefaultLayout from "@/layouts/default";
 import ProductDisplay from "@/components/ProductDisplay";
 // Redux imports
-import { TOGGLE_FAVORITE } from "@/store/actionTypes";
+import { TOGGLE_FAVORITE, ADD_TO_CART } from "@/store/actionTypes";
 
 export default function ProductDetailPage() {
   const { productSlug } = useParams();
@@ -205,12 +206,9 @@ export default function ProductDetailPage() {
             <div className="flex flex-col sm:flex-row gap-4 mt-auto">
               {/* Add to Cart Button */}
               <button
-                disabled
-                className="w-full sm:w-auto bg-gray-300 text-gray-600 py-3 px-6 rounded-full font-semibold cursor-not-allowed shadow-md"
+                className="w-full sm:w-auto bg-primary text-white hover:bg-primary-light dark:hover:bg-green-500 dark:text-white px-6 py-3 rounded-full font-semibold shadow-md transition duration-200"
                 onClick={() =>
-                  console.log(
-                    "Add to Cart clicked! (Feature to be implemented by another developer)"
-                  )
+                  dispatch({ type: ADD_TO_CART, payload: product })
                 }
               >
                 Add to Cart
@@ -285,7 +283,10 @@ export default function ProductDetailPage() {
                 className="flex overflow-x-auto scroll-smooth space-x-4 p-2 scrollbar-hide"
               >
                 {relatedProducts.map((relatedProduct) => (
-                  <div key={relatedProduct.id} className="flex-none w-64 relative">
+                  <div
+                    key={relatedProduct.id}
+                    className="flex-none w-64 relative"
+                  >
                     <ProductDisplay product={relatedProduct} />
                   </div>
                 ))}

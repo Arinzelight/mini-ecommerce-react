@@ -1,5 +1,7 @@
 /* eslint-disable prettier/prettier */
 
+import { Link } from "react-router-dom";
+
 import FavoriteButton from "./FavoriteButton";
 
 // Utility function to generate a slug from a string
@@ -45,12 +47,12 @@ export default function ProductCard({ product }) {
           ${product.price}
         </p>
         <button className="mt-4 w-full bg-primary text-white py-2 rounded-full font-semibold hover:bg-primary-light transition-colors duration-200">
-          <a
+          <Link
             className="block text-center text-white w-full"
-            href={`/products/${generateSlug(product.title)}`}
+            to={`/products/${generateSlug(product.title)}`}
           >
             View Details
-          </a>
+          </Link>
         </button>
       </div>
     </div>
