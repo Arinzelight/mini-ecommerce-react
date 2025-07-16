@@ -1,46 +1,49 @@
-/* eslint-disable prettier/prettier */
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import clsx from "clsx";
 
 import { fetchProductDetails, fetchProductsByCategory } from "../api/products";
 
 import DefaultLayout from "@/layouts/default";
 import ProductDisplay from "@/components/ProductDisplay";
-// Redux imports
+
 import { TOGGLE_FAVORITE } from "@/store/actionTypes";
+import { HeartIcon, HeartFilledIcon } from "@/components/icons";
 
 export default function ProductDetailPage() {
   const { productSlug } = useParams();
+
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isLoadingRelated, setIsLoadingRelated] = useState(true);
   const [errorRelated, setErrorRelated] = useState(null);
+  const [currentImage, setCurrentImage] = useState('');
 
-  // Ref for the carousel container to enable scrolling
   const carouselRef = useRef(null);
 
-  // Redux hooks
   const dispatch = useDispatch();
   const favoriteItems = useSelector((state) => state.favorites.items);
   const isFavorite = product
     ? favoriteItems.some((item) => item.id === product.id)
     : false;
 
-  // Main Product Details Fetch Effect
+  // Fetch product details based on slug
   useEffect(() => {
     const getProductDetails = async () => {
       setIsLoading(true);
       setError(null);
       setProduct(null);
+      setCurrentImage('');
 
       try {
         const fetchedProduct = await fetchProductDetails(productSlug);
 
         if (fetchedProduct) {
           setProduct(fetchedProduct);
+          setCurrentImage(fetchedProduct.images?.[0] || `https://placehold.co/600x400/FDFBF8/07484A?text=No+Image`);
         } else {
           setError("Product not found or failed to load.");
         }
@@ -59,13 +62,12 @@ export default function ProductDetailPage() {
     }
   }, [productSlug]);
 
-  // Related Products Fetch Effect
+  // Fetch related products based on the same category
   useEffect(() => {
     const getRelatedProducts = async () => {
       if (!product || !product.category?.id) {
         setRelatedProducts([]);
         setIsLoadingRelated(false);
-
         return;
       }
 
@@ -73,17 +75,15 @@ export default function ProductDetailPage() {
       setErrorRelated(null);
 
       try {
-        // Fetch products from the same category
         const allCategoryProducts = await fetchProductsByCategory(
           product.category.id,
           0,
           20,
         );
 
-        // Filter out the current product and invalid products
         const validRelatedProducts = allCategoryProducts.filter(
           (prod) =>
-            prod.id !== product.id && // Exclude the current product itself
+            prod.id !== product.id &&
             prod.title &&
             prod.images &&
             prod.images.length > 0 &&
@@ -100,9 +100,9 @@ export default function ProductDetailPage() {
     };
 
     getRelatedProducts();
-  }, [product]); // Re-run when the main 'product' object changes
+  }, [product]);
 
-  // Redux Action Handler
+  // Toggle product as favorite
   const handleToggleFavorite = () => {
     if (product) {
       dispatch({
@@ -112,7 +112,7 @@ export default function ProductDetailPage() {
     }
   };
 
-  // Carousel Navigation Handlers
+  // Scroll carousel left or right
   const scrollCarousel = (direction) => {
     if (carouselRef.current) {
       const scrollAmount = 300;
@@ -125,7 +125,6 @@ export default function ProductDetailPage() {
     }
   };
 
-  // Conditional Rendering for Main Product Details
   if (isLoading) {
     return (
       <DefaultLayout>
@@ -156,7 +155,6 @@ export default function ProductDetailPage() {
     );
   }
 
-  // Product Details Display
   return (
     <DefaultLayout>
       <div className="container mx-auto p-4 py-8 md:py-10">
@@ -167,10 +165,7 @@ export default function ProductDetailPage() {
             <img
               alt={product.title}
               className="w-full max-w-lg h-auto rounded-lg object-contain border border-gray-200 dark:border-gray-700"
-              src={
-                product.images[0] ||
-                `https://placehold.co/600x400/FDFBF8/07484A?text=No+Image`
-              }
+              src={currentImage}
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = `https://placehold.co/600x400/FDFBF8/07484A?text=${encodeURIComponent(product.title || "Product")}`;
@@ -201,9 +196,33 @@ export default function ProductDetailPage() {
               </p>
             )}
 
+            {/* Thumbnail Gallery */}
+            {product.images && product.images.length > 1 && (
+              <div className="flex overflow-x-auto scroll-smooth space-x-2 p-2 hide-scrollbar w-full max-w-lg justify-center mb-6">
+                {product.images.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`${product.title} - view ${index + 1}`}
+                    className={clsx(
+                      "w-20 h-20 object-cover rounded-md cursor-pointer border-2",
+                      "transition-all duration-200",
+                      image === currentImage
+                        ? "border-primary dark:border-secondary-mint"
+                        : "border-transparent hover:border-gray-300 dark:hover:border-gray-600"
+                    )}
+                    onClick={() => setCurrentImage(image)}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = `https://placehold.co/80x80/FDFBF8/07484A?text=Img`;
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mt-auto">
-              {/* Add to Cart Button */}
               <button
                 disabled
                 className="w-full sm:w-auto bg-gray-300 text-gray-600 py-3 px-6 rounded-full font-semibold cursor-not-allowed shadow-md"
@@ -216,16 +235,20 @@ export default function ProductDetailPage() {
                 Add to Cart
               </button>
 
-              {/* Add to Favorites Button  */}
               <button
-                className={`w-full sm:w-auto py-3 px-6 rounded-full font-semibold transition-colors duration-200 ${
+                className={`w-full sm:w-auto py-3 px-6 rounded-full font-semibold transition-colors duration-200 flex items-center justify-center gap-2 ${
                   isFavorite
                     ? "bg-transparent border border-red-600  hover:bg-red-600 dark:hover:bg-red-500 dark:hover:text-white dark:border-red-500 text-red-500"
                     : "border border-primary text-primary hover:bg-primary-light dark:hover:bg-green-500 dark:hover:text-white dark:border-green-500 dark:text-green-500 hover:text-white"
                 }`}
                 onClick={handleToggleFavorite}
               >
-                {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+                {isFavorite ? (
+                  <HeartFilledIcon className="w-5 h-5" />
+                ) : (
+                  <HeartIcon className="w-5 h-5" />
+                )}
+                <span>{isFavorite ? "Remove from Favorites" : "Add to Favorites"}</span>
               </button>
             </div>
           </div>
@@ -257,7 +280,7 @@ export default function ProductDetailPage() {
             </div>
           ) : (
             <div className="relative">
-              {/* Left Scroll Button */}
+              {/* Scroll left button */}
               <button
                 aria-label="Scroll left"
                 className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-700 p-2 rounded-full shadow-md z-10 focus:outline-none hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
@@ -279,19 +302,22 @@ export default function ProductDetailPage() {
                 </svg>
               </button>
 
-              {/* Carousel Track */}
+              {/* Carousel container */}
               <div
                 ref={carouselRef}
                 className="flex overflow-x-auto scroll-smooth space-x-4 p-2 scrollbar-hide"
               >
                 {relatedProducts.map((relatedProduct) => (
-                  <div key={relatedProduct.id} className="flex-none w-64 relative">
+                  <div
+                    key={relatedProduct.id}
+                    className="flex-none w-40 sm:w-48 md:w-56 lg:w-64 relative"
+                  >
                     <ProductDisplay product={relatedProduct} />
                   </div>
                 ))}
               </div>
 
-              {/* Right Scroll Button */}
+              {/* Scroll right button */}
               <button
                 aria-label="Scroll right"
                 className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-700 p-2 rounded-full shadow-md z-10 focus:outline-none hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"

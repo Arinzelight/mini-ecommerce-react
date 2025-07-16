@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from "react";
 import { Spinner } from "@heroui/spinner";
 
@@ -8,24 +7,20 @@ import { fetchProductsByCategory } from "../api/products";
 import DefaultLayout from "@/layouts/default";
 import ProductGrid from "@/components/ProductGrid";
 
+// Number of categories to display in the sidebar
+const SIDEBAR_CATEGORY_LIMIT = 5;
 
-
-export default function CategoriesPage() {
-  // State for categories display
+export default function Categories() {
   const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
-
-  // State for products display (simplified - no pagination states)
   const [products, setProducts] = useState([]);
-
-  // Global loading and error states for the entire page
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const PRODUCTS_PER_PAGE = 10;
 
-  // Fetching categories 
+  // Fetch all valid categories on initial load
   useEffect(() => {
     const getCategoriesData = async () => {
       setIsLoading(true);
@@ -36,7 +31,6 @@ export default function CategoriesPage() {
         const validCategories = data.filter(
           (cat) => cat.name && cat.image && cat.image.startsWith("http"),
         );
-
         setCategories(validCategories);
       } catch (err) {
         setError(`Failed to load categories. Please try again later: ${err.message}`);
@@ -48,12 +42,11 @@ export default function CategoriesPage() {
     getCategoriesData();
   }, []);
 
-  // fetching products from seleted category ---
+  // Fetch products when a category is selected
   useEffect(() => {
     const getProductsForCategory = async () => {
       if (!selectedCategory) {
-        setProducts([]); 
-
+        setProducts([]);
         return;
       }
 
@@ -62,8 +55,6 @@ export default function CategoriesPage() {
 
       try {
         const allProducts = await fetchProductsByCategory(selectedCategory);
-
-        // Filter out products with null/empty titles or invalid image URLs
         const validProducts = allProducts.filter(
           (prod) =>
             prod.title &&
@@ -71,36 +62,38 @@ export default function CategoriesPage() {
             prod.images.length > 0 &&
             prod.images[0].startsWith("http"),
         );
-
         setProducts(validProducts.slice(0, PRODUCTS_PER_PAGE));
       } catch (err) {
         setError(`Failed to load products for category. ${err.message}`);
-        
-        setProducts([]); 
+        setProducts([]);
       } finally {
         setIsLoading(false);
       }
     };
 
     getProductsForCategory();
-  }, [selectedCategory]); 
+  }, [selectedCategory]);
 
-  // --- Handlers ---
+  // Handle selecting a specific category
   const handleCategoryClick = (categoryId) => {
     setSelectedCategory(categoryId);
   };
 
+  // Reset to show all categories
   const handleViewAllCategoriesClick = () => {
     setSelectedCategory(null);
     setSearchTerm("");
   };
 
-  // Filter categories based on search term for sidebar
+  // Filter categories based on search input
   const filteredCategories = categories.filter((category) =>
     category.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  // --- Conditional Rendering for Loading/Error State ---
+  // Limit sidebar categories to display
+  const sidebarCategories = filteredCategories.slice(0, SIDEBAR_CATEGORY_LIMIT);
+
+  // Show loading state for categories
   if (isLoading && !selectedCategory) {
     return (
       <DefaultLayout>
@@ -116,6 +109,7 @@ export default function CategoriesPage() {
     );
   }
 
+  // Show error state for categories
   if (error && !selectedCategory) {
     return (
       <DefaultLayout>
@@ -134,7 +128,7 @@ export default function CategoriesPage() {
         </h1>
 
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Left Section: Category Navigation Menu */}
+          {/* Sidebar: Category Filter */}
           <div
             className="lg:w-1/4 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md
                         lg:sticky lg:top-[4.5rem] lg:self-start lg:max-h-[calc(100vh-4.5rem)] lg:overflow-y-auto"
@@ -143,11 +137,11 @@ export default function CategoriesPage() {
               Categories
             </h2>
 
-            {/* Search Bar for Categories */}
+            {/* Search bar for category filtering */}
             <div className="relative mb-6">
               <input
                 className="w-full pl-10 pr-3 py-2 rounded-lg bg-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white"
-                placeholder="Search category..."
+                placeholder="Search Item...."
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -168,22 +162,22 @@ export default function CategoriesPage() {
               </svg>
             </div>
 
-            {/* List of Categories */}
-            <ul className="space-y-2 mb-6 pr-2">
-              <li>
-                <button
-                  className={`w-full text-left p-2 rounded-md transition-colors duration-200
-                    ${
-                      selectedCategory === null
-                        ? "bg-primary dark:text-secondary-mint text-white"
-                        : "text-primary dark:text-secondary-mint hover:bg-primary-light hover:text-white"
-                    }`}
-                  onClick={handleViewAllCategoriesClick}
-                >
-                  All Categories
-                </button>
-              </li>
-              {filteredCategories.map((category) => (
+            {/* All categories button */}
+            <button
+              className={`w-full text-left p-2 rounded-md transition-colors duration-200 mb-6
+                ${
+                  selectedCategory === null
+                    ? "bg-primary dark:text-secondary-mint text-white"
+                    : "text-primary dark:text-secondary-mint hover:bg-primary-light hover:text-white"
+                }`}
+              onClick={handleViewAllCategoriesClick}
+            >
+              All Categories
+            </button>
+
+            {/* Sidebar category buttons */}
+            <ul className="space-y-2 mb-6 pr-2 hidden lg:block">
+              {sidebarCategories.map((category) => (
                 <li key={category.id}>
                   <button
                     className={`w-full text-left p-2 rounded-md transition-colors duration-200
@@ -201,15 +195,15 @@ export default function CategoriesPage() {
             </ul>
           </div>
 
-          {/* Right Section: Category Cards Display OR Product Cards Display */}
+          {/* Main content: Category cards or product grid */}
           <div className="lg:w-3/4">
             {selectedCategory === null ? (
-              // Display Category Cards when no specific category is selected
+              // Show all category cards
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                 {filteredCategories.map((category) => (
                   <div
                     key={category.id}
-                    className="relative group rounded-lg overflow-hidden shadow-md bg-white dark:bg-gray-800 transition-transform duration-300 hover:scale-105"
+                    className="relative group rounded-lg overflow-hidden shadow-md bg-white dark:bg-gray-800 transition-transform duration-300 lg:hover:scale-105"
                   >
                     <img
                       alt={category.name}
@@ -220,7 +214,9 @@ export default function CategoriesPage() {
                         e.target.src = `https://placehold.co/600x400/FDFBF8/07484A?text=${category.name.replace(/\s/g, "+")}`;
                       }}
                     />
-                    <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div
+                      className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300"
+                    >
                       <h3 className="text-white text-xl font-bold mb-2">
                         {category.name}
                       </h3>
@@ -235,7 +231,7 @@ export default function CategoriesPage() {
                 ))}
               </div>
             ) : (
-              // Display Product Cards
+              // Show products under selected category
               <div>
                 <h2 className="text-3xl font-bold text-primary mb-6 dark:text-secondary-lavender">
                   Products in{" "}
@@ -243,24 +239,23 @@ export default function CategoriesPage() {
                     ?.name || "Selected Category"}
                 </h2>
 
-                {isLoading ? ( // Show loading state for products
+                {isLoading ? (
                   <div className="flex items-center justify-center h-48 text-primary">
                     <p className="text-xl font-semibold">Loading products...</p>
                   </div>
-                ) : error ? ( // Show error for products
+                ) : error ? (
                   <div className="flex items-center justify-center h-48 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200">
                     <p className="text-xl font-semibold">
                       Error loading products: {error}
                     </p>
                   </div>
-                ) : products.length === 0 ? ( // No products found
+                ) : products.length === 0 ? (
                   <div className="flex items-center justify-center h-48 text-gray-600 dark:text-gray-400">
                     <p className="text-xl font-semibold">
                       No products found for this category.
                     </p>
                   </div>
                 ) : (
-                  // Products Grid
                   <ProductGrid products={products} />
                 )}
               </div>
