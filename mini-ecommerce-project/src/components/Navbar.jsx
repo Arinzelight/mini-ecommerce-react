@@ -11,6 +11,7 @@ import SearchInput from "./SearchInput";
 
 export const Navbar = () => {
   const favoriteItems = useSelector((state) => state.favorites.items);
+  const cartItems = useSelector((state) => state.cart.items);
 
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -18,7 +19,7 @@ export const Navbar = () => {
   const location = useLocation();
   const currentPath = location.pathname;
 
-  const cartItemCount = 3;
+  const cartItemCount = cartItems;
 
   const searchInputRef = useRef(null);
   const searchIconRef = useRef(null);
@@ -120,9 +121,9 @@ export const Navbar = () => {
             to="/cart"
           >
             <CartIcon className="w-6 h-6 text-primary" />
-            {cartItemCount > 0 && (
+            {cartItemCount.length > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
-                {cartItemCount}
+                {cartItemCount.length}
               </span>
             )}
           </Link>
@@ -233,7 +234,7 @@ export const Navbar = () => {
                     "block transition-colors duration-200 text-lg px-3 py-2 rounded-md",
                     isActive
                       ? "bg-primary text-white"
-                      : "text-primary hover:text-primary-light"
+                      : "text-primary dark:text-secondary-mint hover:text-primary-light"
                   )}
                   to={item.href}
                   onClick={toggleMobileMenu}
