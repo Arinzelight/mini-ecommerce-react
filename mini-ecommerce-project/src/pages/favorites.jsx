@@ -91,7 +91,7 @@ const FavoritesPage = () => {
                   <div className="flex justify-between items-center pt-3">
                     <Link
                       className="text-sm text-primary dark:text-secondary-mint font-medium hover:underline"
-                      to={`/product/${product.slug}`}
+                      to={`/products/${product.slug}`}
                     >
                       View
                     </Link>
