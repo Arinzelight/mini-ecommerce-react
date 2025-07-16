@@ -1,15 +1,14 @@
-/* eslint-disable prettier/prettier */
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-// Import action type
+import clsx from "clsx";
 
 import { fetchProductDetails, fetchProductsByCategory } from "../api/products";
 
 import DefaultLayout from "@/layouts/default";
 import ProductDisplay from "@/components/ProductDisplay";
-// Redux imports
 import { TOGGLE_FAVORITE, ADD_TO_CART } from "@/store/actionTypes";
+import { HeartIcon, HeartFilledIcon } from "@/components/icons";
 
 export default function ProductDetailPage() {
   const { productSlug } = useParams();
@@ -19,34 +18,38 @@ export default function ProductDetailPage() {
   const [error, setError] = useState(null);
   const [isLoadingRelated, setIsLoadingRelated] = useState(true);
   const [errorRelated, setErrorRelated] = useState(null);
+  const [currentImage, setCurrentImage] = useState("");
 
-  // Ref for the carousel container to enable scrolling
   const carouselRef = useRef(null);
-
-  // Redux hooks
   const dispatch = useDispatch();
+
   const favoriteItems = useSelector((state) => state.favorites.items);
   const isFavorite = product
     ? favoriteItems.some((item) => item.id === product.id)
     : false;
 
-  // Main Product Details Fetch Effect
+  // Fetch product details
   useEffect(() => {
     const getProductDetails = async () => {
       setIsLoading(true);
       setError(null);
       setProduct(null);
+      setCurrentImage("");
 
       try {
         const fetchedProduct = await fetchProductDetails(productSlug);
 
         if (fetchedProduct) {
           setProduct(fetchedProduct);
+          setCurrentImage(
+            fetchedProduct.images?.[0] ||
+              `https://placehold.co/600x400/FDFBF8/07484A?text=No+Image`
+          );
         } else {
           setError("Product not found or failed to load.");
         }
       } catch (err) {
-        setError(err.message || "An unexpected error occurred." + err);
+        setError(err.message || "An unexpected error occurred.");
       } finally {
         setIsLoading(false);
       }
@@ -60,13 +63,12 @@ export default function ProductDetailPage() {
     }
   }, [productSlug]);
 
-  // Related Products Fetch Effect
+  // Fetch related products
   useEffect(() => {
     const getRelatedProducts = async () => {
-      if (!product || !product.category?.id) {
+      if (!product?.category?.id) {
         setRelatedProducts([]);
         setIsLoadingRelated(false);
-
         return;
       }
 
@@ -74,26 +76,22 @@ export default function ProductDetailPage() {
       setErrorRelated(null);
 
       try {
-        // Fetch products from the same category
         const allCategoryProducts = await fetchProductsByCategory(
           product.category.id,
           0,
-          20,
+          20
         );
 
-        // Filter out the current product and invalid products
         const validRelatedProducts = allCategoryProducts.filter(
           (prod) =>
-            prod.id !== product.id && // Exclude the current product itself
+            prod.id !== product.id &&
             prod.title &&
-            prod.images &&
-            prod.images.length > 0 &&
-            prod.images[0].startsWith("http"),
+            prod.images?.[0]?.startsWith("http")
         );
 
         setRelatedProducts(validRelatedProducts);
       } catch (err) {
-        setErrorRelated("Failed to load related products." + err);
+        setErrorRelated("Failed to load related products. " + err.message);
         setRelatedProducts([]);
       } finally {
         setIsLoadingRelated(false);
@@ -101,32 +99,22 @@ export default function ProductDetailPage() {
     };
 
     getRelatedProducts();
-  }, [product]); // Re-run when the main 'product' object changes
+  }, [product]);
 
-  // Redux Action Handler
   const handleToggleFavorite = () => {
     if (product) {
-      dispatch({
-        type: TOGGLE_FAVORITE,
-        payload: product,
-      });
+      dispatch({ type: TOGGLE_FAVORITE, payload: product });
     }
   };
 
-  // Carousel Navigation Handlers
   const scrollCarousel = (direction) => {
     if (carouselRef.current) {
       const scrollAmount = 300;
-
-      if (direction === "left") {
-        carouselRef.current.scrollLeft -= scrollAmount;
-      } else {
-        carouselRef.current.scrollLeft += scrollAmount;
-      }
+      carouselRef.current.scrollLeft +=
+        direction === "left" ? -scrollAmount : scrollAmount;
     }
   };
 
-  // Conditional Rendering for Main Product Details
   if (isLoading) {
     return (
       <DefaultLayout>
@@ -157,29 +145,27 @@ export default function ProductDetailPage() {
     );
   }
 
-  // Product Details Display
   return (
     <DefaultLayout>
       <div className="container mx-auto p-4 py-8 md:py-10">
-        {/* Main Product Details Section */}
+        {/* Product Display Section */}
         <div className="flex flex-col lg:flex-row gap-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-12">
-          {/* Product Image Section */}
+          {/* Image */}
           <div className="lg:w-1/2 flex justify-center items-center">
             <img
+              src={currentImage}
               alt={product.title}
-              className="w-full max-w-lg h-auto rounded-lg object-contain border border-gray-200 dark:border-gray-700"
-              src={
-                product.images[0] ||
-                `https://placehold.co/600x400/FDFBF8/07484A?text=No+Image`
-              }
               onError={(e) => {
                 e.target.onerror = null;
-                e.target.src = `https://placehold.co/600x400/FDFBF8/07484A?text=${encodeURIComponent(product.title || "Product")}`;
+                e.target.src = `https://placehold.co/600x400/FDFBF8/07484A?text=${encodeURIComponent(
+                  product.title || "Product"
+                )}`;
               }}
+              className="w-full max-w-lg h-auto rounded-lg object-contain border border-gray-200 dark:border-gray-700"
             />
           </div>
 
-          {/* Product Info Section */}
+          {/* Info */}
           <div className="lg:w-1/2 flex flex-col justify-center">
             <h1 className="text-4xl font-bold text-primary dark:text-secondary-mint mb-2">
               {product.title}
@@ -187,12 +173,10 @@ export default function ProductDetailPage() {
             <p className="text-2xl font-semibold text-green-600 dark:text-green-400 mb-4">
               ${product.price}
             </p>
-
             <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
               {product.description}
             </p>
 
-            {/* Category Display */}
             {product.category && (
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                 Category:{" "}
@@ -202,34 +186,59 @@ export default function ProductDetailPage() {
               </p>
             )}
 
+            {/* Thumbnails */}
+            {product.images?.length > 1 && (
+              <div className="flex overflow-x-auto scroll-smooth space-x-2 p-2 hide-scrollbar w-full max-w-lg justify-center mb-6">
+                {product.images.map((img, idx) => (
+                  <img
+                    key={idx}
+                    src={img}
+                    alt={`thumb-${idx}`}
+                    className={clsx(
+                      "w-20 h-20 object-cover rounded-md cursor-pointer border-2",
+                      img === currentImage
+                        ? "border-primary dark:border-secondary-mint"
+                        : "border-transparent hover:border-gray-300 dark:hover:border-gray-600"
+                    )}
+                    onClick={() => setCurrentImage(img)}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = `https://placehold.co/80x80/FDFBF8/07484A?text=Img`;
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mt-auto">
-              {/* Add to Cart Button */}
               <button
                 className="w-full sm:w-auto bg-primary text-white hover:bg-primary-light dark:hover:bg-green-500 dark:text-white px-6 py-3 rounded-full font-semibold shadow-md transition duration-200"
-                onClick={() =>
-                  dispatch({ type: ADD_TO_CART, payload: product })
-                }
+                onClick={() => dispatch({ type: ADD_TO_CART, payload: product })}
               >
                 Add to Cart
               </button>
 
-              {/* Add to Favorites Button  */}
               <button
-                className={`w-full sm:w-auto py-3 px-6 rounded-full font-semibold transition-colors duration-200 ${
-                  isFavorite
-                    ? "bg-transparent border border-red-600  hover:bg-red-600 dark:hover:bg-red-500 dark:hover:text-white dark:border-red-500 text-red-500"
-                    : "border border-primary text-primary hover:bg-primary-light dark:hover:bg-green-500 dark:hover:text-white dark:border-green-500 dark:text-green-500 hover:text-white"
-                }`}
                 onClick={handleToggleFavorite}
+                className={`w-full sm:w-auto py-3 px-6 rounded-full font-semibold transition-colors duration-200 flex items-center justify-center gap-2 ${
+                  isFavorite
+                    ? "bg-transparent border border-red-600 hover:bg-red-600 dark:hover:bg-red-500 dark:text-white text-red-500"
+                    : "border border-primary text-primary hover:bg-primary-light dark:hover:bg-green-500 dark:hover:text-white"
+                }`}
               >
-                {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+                {isFavorite ? (
+                  <HeartFilledIcon className="w-5 h-5" />
+                ) : (
+                  <HeartIcon className="w-5 h-5" />
+                )}
+                <span>{isFavorite ? "Remove from Favorites" : "Add to Favorites"}</span>
               </button>
             </div>
           </div>
         </div>
 
-        {/* Related Products Carousel Section */}
+        {/* Related Products */}
         <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
           <h2 className="text-2xl font-bold text-primary dark:text-secondary-mint mb-6">
             Other Related Products
@@ -237,80 +246,46 @@ export default function ProductDetailPage() {
 
           {isLoadingRelated ? (
             <div className="flex items-center justify-center h-48 text-primary">
-              <p className="text-xl font-semibold">
-                Loading related products...
-              </p>
+              <p className="text-xl font-semibold">Loading related products...</p>
             </div>
           ) : errorRelated ? (
-            <div className="flex items-center justify-center h-48 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200">
-              <p className="text-xl font-semibold">
-                Error loading related products: {errorRelated}
-              </p>
+            <div className="flex items-center justify-center h-48 text-red-800 dark:text-red-200 bg-red-100 dark:bg-red-900">
+              <p className="text-xl font-semibold">{errorRelated}</p>
             </div>
           ) : relatedProducts.length === 0 ? (
             <div className="flex items-center justify-center h-48 text-gray-600 dark:text-gray-400">
-              <p className="text-xl font-semibold">
-                No related products found.
-              </p>
+              <p className="text-xl font-semibold">No related products found.</p>
             </div>
           ) : (
             <div className="relative">
-              {/* Left Scroll Button */}
               <button
                 aria-label="Scroll left"
-                className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-700 p-2 rounded-full shadow-md z-10 focus:outline-none hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-700 p-2 rounded-full shadow-md z-10 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                 onClick={() => scrollCarousel("left")}
               >
-                <svg
-                  className="w-6 h-6 text-primary dark:text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M15 19l-7-7 7-7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                  />
+                <svg className="w-6 h-6 text-primary dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M15 19l-7-7 7-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
                 </svg>
               </button>
 
-              {/* Carousel Track */}
               <div
                 ref={carouselRef}
                 className="flex overflow-x-auto scroll-smooth space-x-4 p-2 scrollbar-hide"
               >
                 {relatedProducts.map((relatedProduct) => (
-                  <div
-                    key={relatedProduct.id}
-                    className="flex-none w-64 relative"
-                  >
+                  <div key={relatedProduct.id} className="flex-none w-64">
                     <ProductDisplay product={relatedProduct} />
                   </div>
                 ))}
               </div>
 
-              {/* Right Scroll Button */}
               <button
                 aria-label="Scroll right"
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-700 p-2 rounded-full shadow-md z-10 focus:outline-none hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-700 p-2 rounded-full shadow-md z-10 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                 onClick={() => scrollCarousel("right")}
               >
-                <svg
-                  className="w-6 h-6 text-primary dark:text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M9 5l7 7-7 7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                  />
+                <svg className="w-6 h-6 text-primary dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
                 </svg>
               </button>
             </div>
